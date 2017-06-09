@@ -1,0 +1,57 @@
+{
+  "name": "jnetui",
+  "version": "0.0.1-SNAPSHOT",
+  "description": "angular app for jordanalphonso.net",
+  "main": "main.js",
+  "scripts": {
+    "build": "gulp build",
+    "serve": "gulp build:serve",
+    "postinstall": "typings install"
+  },
+  "keywords": [
+    "angular",
+    "jnet"
+  ],
+  "author": "jordan alphonso",
+  "license": "ISC",
+  "dependencies": {
+    "@angular/common": "^4.0.1",
+    "@angular/compiler": "^4.0.1",
+    "@angular/core": "^4.0.1",
+    "@angular/forms": "^4.0.1",
+    "@angular/http": "^4.0.1",
+    "@angular/platform-browser": "^4.0.1",
+    "@angular/platform-browser-dynamic": "^4.0.1",
+    "@angular/router": "^4.0.1"
+  },
+  "devDependencies": {
+    "@types/jasmine": "^2.5.47",
+    "browser-sync": "^2.18.8",
+    "connect-history-api-fallback": "^1.3.0",
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^3.1.0",
+    "gulp-sourcemaps": "^2.6.0",
+    "gulp-tslint": "^8.0.0",
+    "gulp-typescript": "^3.1.6",
+    "gulp-uglify": "^2.1.2",
+    "isparta": "^4.0.0",
+    "jasmine": "^2.6.0",
+    "karma": "^1.6.0",
+    "karma-chrome-launcher": "^2.1.0",
+    "karma-cli": "^1.0.1",
+    "karma-coverage": "^1.1.1",
+    "karma-jasmine": "^1.1.0",
+    "karma-mocha-reporter": "^2.2.3",
+    "karma-phantomjs-launcher": "^1.0.4",
+    "karma-typescript": "^3.0.2",
+    "lite-server": "^2.3.0",
+    "requirejs": "^2.3.3",
+    "ts-node": "^3.0.2",
+    "tslint": "^5.1.0",
+    "typescript": "^2.2.2",
+    "typings": "^2.1.1",
+  }
+}

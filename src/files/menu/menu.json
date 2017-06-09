@@ -1,0 +1,24 @@
+[
+	{"title": "dashboard", "url": "/dashboard"},
+
+	{"title": "links", "url": "/links"},
+
+	{"title":"findings", "url":"/findings", 
+		"submenus":[
+			{"title": "Angular", "url": "/ng"},
+			{"title": "Javascript", "url": "/js"},
+			{"title": "Java", "url": "/java"},
+			{"title": ".NET", "url": "/net"},
+			{"title": "Node", "url": "/node"}
+		]
+	},
+
+	{"title":"", "url":"divider"},
+
+	{"title":"portfolio", "url":"/portfolio"},
+
+	{"title":"me", "url":"/me"},
+	
+	{"title":"contact", "url":"/contact"}
+
+]

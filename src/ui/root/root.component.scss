@@ -1,0 +1,305 @@
+@import url('https://fonts.googleapis.com/css?family=Khand');
+
+$antone-font-stack: 'Anton', sans-serif;
+$yanone-font-stack: 'Yanone Kaffeesatz', sans-serif;
+$font-stack: 'Khand', sans-serif;
+
+$primary-color: #262626;
+$secondary-color: #e3671c;
+$font-color: #FFFFFF;
+
+@mixin center($type: null) {
+  position: absolute;
+  @if not $type {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  } @else if $type == "top" {
+    left: 50%;
+    transform: translateX(-50%);
+  } @else if $type == "left" {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+ul {
+  list-style-type: none;
+  font-family: $font-stack;
+}
+
+body {
+  margin: 0;
+  min-height: 100%;
+  font-family: $font-stack;
+  background-color: $primary-color;
+  }
+
+#wrapper {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  font-family: $font-stack;
+  z-index: 1;
+}
+
+.login-wrap {
+  position: absolute;
+  width: 100%;
+  z-index: 2;
+}
+
+.login-bar {
+  position:relative;
+  background-color: darken($primary-color, 15%);
+  width: 80px;
+  height: 20px;
+  float: right;
+  margin-right: 10px;
+  color: $font-color;
+  padding: 3px;
+  text-align: center;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  border-bottom: 2px solid rgba(255,255,255,0.35);
+  border-left: 2px solid rgba(255,255,255,0.35);
+  border-right: 2px solid rgba(255,255,255,0.35);
+  &:hover {
+    background-color: $primary-color;
+    cursor: pointer;
+  }
+  &:active {
+    background-color: lighten($primary-color, 15%);
+    transform: scale(0.95);
+  }
+}
+
+.center-text {
+  text-align: center;
+}
+
+.router-content {
+  @extend .center-text;
+  overflow: hidden;
+  margin-left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  height: 80%;
+  border-radius: 10px;
+  background-color: red;
+}
+
+.edge-container {
+  background-color: darken($primary-color, 3%);
+  margin-left: 3%;
+  margin-top: 3%;
+  width: 97%;
+  height: 96%;
+  float: left;
+  overflow: hidden;
+}
+
+.submenu {
+  background-color: rgba(0,0,0,0) !important;
+  height: 50px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  background-color: black;
+  line-decoration: none;
+  text-align:center;
+  padding-top: 1%;
+  margin-left: -50px;
+  margin-top: -0.1%;
+  li {
+   color: $font-color;
+    font-size: 120%;
+    display: inline;
+    padding-bottom: 5%;
+    outline: none;
+    cursor: pointer;  
+  }
+  .selected {
+    text-align: center;
+    vertical-align: middle;
+    color: $secondary-color;
+  }
+  .divider {
+    &:after {
+      content: "|";
+      font-size: 150%;
+      margin-left: 25px;
+      margin-right: 25px;
+      color: $secondary-color;
+    }
+  }
+}
+
+.logo-box {
+  @extend .center-text;
+  background-color: darken($primary-color, 5%);
+  width: 80px;
+  margin: 2%;
+  padding: 1%;
+  font-size: 170%;
+  border-radius: 5px;
+  color: $font-color;
+  z-index: 10;
+  position: absolute;
+}
+
+.menubar {
+  @include center("left");
+  margin-left: -100px;
+  color: $font-color;
+  z-index: 5;
+  &:hover {
+    cursor: default;
+  }
+}
+
+.menubar-item {
+  font-size: 100%;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-right: 10px;
+  text-align: right;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  background-color: lighten($primary-color, 15%);
+  border-radius: 3px;
+  outline: none;
+  &:hover {
+    background-color: lighten($primary-color, 35%);
+    cursor: pointer;
+  }
+}
+
+.menubar-item-selected {
+  color: $secondary-color;
+  background-color: lighten($primary-color, 15%);
+  font-weight: bolder;
+  transform: scale(1.1);
+  border: 1px solid $secondary-color;
+  &:hover {
+    background-color: lighten($primary-color, 15%);
+  }
+}
+
+.menubar-divider {
+  background-color: $secondary-color;
+  width: 150px;
+  height: 3px;
+  &:hover {
+    background-color: $secondary-color;
+    cursor: default;
+  }
+}
+
+.menubar-top {
+  @extend .menubar-item;
+  height: 1px;
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 100px;
+  background-color: darken($secondary-color, 20%);
+  &:hover {
+    background-color: darken($secondary-color, 20%);
+    cursor: default;
+  }
+}
+
+.menubar-bottom {
+  @extend .menubar-top;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 100px;
+  &:hover {
+    background-color: darken($secondary-color, 20%);
+    cursor: default;
+  }
+}
+
+.login-view-bg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 300;
+}
+
+.login-view-box {
+  @extend .login-view-bg;
+  @include center();
+  width: 25%;
+  height: auto;
+  background-color: lighten($primary-color, 15%);
+  border-radius: 10px;
+  border: 2px solid $secondary-color;
+  z-index: 400;
+  .title {
+    font-family: $font-stack;
+    margin-top: 5%;
+    font-size: 175%;
+    text-align: center;
+    color: white;
+  }
+  input {
+    outline: none;
+    border-radius: 5px;
+    width: 75%;
+    height: 30px;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 5%;
+    margin-bottom: 0;
+    padding-left: 2%;
+    padding-right: 2%;
+  }
+  button {
+    color: white;
+    font-size: 120%;
+    font-family: $font-stack;
+    outline: none;
+    background-color: $secondary-color;
+    border: 0;
+    border-radius: 5px;
+    height: 40px;
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 5%;
+    margin-top: 5%;
+    margin-bottom: 10%;
+    &:hover {
+      background-color: lighten($secondary-color, 5%);
+    }
+    &:active {
+      background-color: darken($secondary-color, 10%);
+    }
+  }
+}
+
+.errors {
+  color: #a94442;
+  font-size: 115%;
+  text-align: center;
+  background-color: darken(#a94442, 30%);
+  border-radius: 5px;
+  font-family: $font-stack;
+  margin-left: 10%;
+  margin-right: 10%;
+  width: 80%;
+}
+
+.ng-valid[required], .ng-valid.required  {
+      border: 2px solid #42A948;
+}
+
+.ng-pristine[required], .ng-pristine.required  {
+      border: 0;
+}
+
+.ng-invalid:not(form)  {
+  border: 2px solid #a94442;
+}

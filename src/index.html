@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base href="/" />
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <title>jordanalphonso.net</title>
+
+    <script src="lib/core-js/client/shim.min.js"></script>
+
+    <script src="lib/zone.js/dist/zone.js"></script>
+    <script src="lib/reflect-metadata/Reflect.js"></script>
+    <script src="lib/systemjs/dist/system.src.js"></script>
+
+    <script src="systemjs.config.js"></script>
+    <script>
+        System.import('jnet')
+            .then(null, console.error.bind(console));
+    </script>
+</head>
+<body style="margin:0; min-height:100%; background-color:#262626">
+
+    <jnet>Loading jordanalphonso.net</jnet>
+
+</body>
+
+</html>

@@ -1,0 +1,59 @@
+<div id="wrapper">
+
+	<div class="logo-box">
+    	ja.
+  	</div>
+
+  	<div class="edge-container">
+      <ul class="submenu">
+        <li *ngFor="let sub of getSubMenu(); last as last"
+            [routerLink]="sub.url" routerLinkActive="selected"
+            [ngClass]="{'divider': !last}">
+              {{sub.title}}
+        </li>
+      </ul>
+
+      <!-- All component content will be injected in the <router-outlet> below -->
+      <div class="router-content">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+
+  	<div class="login-wrap">
+    	<div class="login-bar" (click)="displayLogin()">login</div>
+  	</div>
+
+  	<ul class="menubar">
+  		<li class="menubar-top"></li>
+      <li class="menubar-divider"></li>
+      <li *ngFor="let item of menu | async"
+          [routerLink]="item.url" routerLinkActive="menubar-item-selected"
+          [ngClass]="{'menubar-item':!isDivider(item), 'menubar-divider':isDivider(item)}">
+            {{item.title}}
+      </li>
+      <li class="menubar-divider"></li>
+      <li class="menubar-bottom"></li>
+  	</ul>
+
+</div>
+
+<div *ngIf="loginView" class="login-view-box">
+  <form>
+    <div class="title">ja.</div>
+    <div class="errors">
+      <div *ngFor="let error of msg?.errors">
+        {{error}}
+      </div>
+    </div>
+    <input [(ngModel)]="user.name" name="name" 
+            #name type="text" placeholder="email or username" 
+            required />
+    <input [(ngModel)]="user.pw" name="pw" 
+            #pw type="password" placeholder="passowrd" 
+            required />
+    <button type="submit" (click)="authenticate()">login</button>
+  </form>
+</div>
+<div *ngIf="loginView" class="login-view-bg"
+      (click)="hideLogin()">
+</div>
