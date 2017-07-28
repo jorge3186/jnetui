@@ -9,7 +9,14 @@ const karma = require('karma');
 const browsersync = require('browser-sync').create();
 const historyAPI = require('connect-history-api-fallback');
 const del = require('del');
+const remap = require('remap-istanbul/lib/gulpRemapIstanbul');
 
+/**
+ * @type {Class}
+ * 
+ * Helper class to retrieve tasks through
+ * a static get(taskname) function.
+ */
 class Tasks {
 
 	static get(task) {
@@ -86,13 +93,17 @@ const taskdef = {
 	        'systemjs/dist/system-polyfills.js',
 	        'systemjs/dist/system.src.js',
 	        'reflect-metadata/Reflect.js',
-	        'rxjs/**',
-	        'zone.js/dist/**',
+	        'rxjs/**/*.js',
+	        'zone.js/dist/**/*.js',
 	        '@angular/**/bundles/**'
 	    ], {cwd: "node_modules/**"})
 	        .pipe(gulp.dest("dist/lib"));
 	},
 
+	/**
+	 * Compiles all typescript files into javascript es5 files.
+	 * This task excludes all test files and test folders.
+	 */
 	"compile": () => {
 		const result = gulp.src(['src/**/*.ts', '!src/**/*.spec.ts', '!src/**/test/*.ts'])
 	        .pipe(sourcemaps.init())
@@ -102,6 +113,11 @@ const taskdef = {
 	        .pipe(gulp.dest('dist/app'));
 	},
 
+	/**
+	 * Creates a karma server based off the karma.config.js file
+	 * and starts the test executions. Once complete, it will start the 
+	 * 'test:postclean' task.
+	 */
 	"test": () => {
 		const server = new karma.Server({
 	        configFile: __dirname+'/karma/karma.config.js',
@@ -111,6 +127,10 @@ const taskdef = {
 	    server.start();
 	},
 
+	/**
+	 * Compiles all typescript files that either end in 'spec.ts' or 
+	 * exists within a folder named test.
+	 */
 	"test:compile": () => {
 		const result = gulp.src(['src/**/*.spec.ts', 'src/**/test/*.ts'])
 	        .pipe(sourcemaps.init())
@@ -120,12 +140,36 @@ const taskdef = {
 	        .pipe(gulp.dest('dist/app'));
 	},
 
+	/**
+	 * Once karma has completed, the test files are gathered
+	 * and deletes them from the 'dist' folder.
+	 */
 	"test:postclean": () => {
 		del('dist/app/**/*.spec.js');
     	del('dist/app/**/*.spec.js.map');
     	del('dist/app/**/test');
+    	del('dist/coverage');
 	},
 
+	/**
+	 * Takes the 'coverage-final.json' file produced by karma
+	 * and uses remap-istanbul to remap the coverage to the typescript
+	 * files and sends the reports to the 'dist/coverage-reports' folder.
+	 */
+	"test:remap": () => {
+		return gulp.src('dist/coverage/**/coverage-final.json')
+			.pipe(remap({
+				reports: {
+					'html': 'dist/coverage-reports/html',
+					'cobertura': 'dist/coverage-reports/coverage.xml',
+					'text-summary': null
+				}
+			}));
+	},
+
+	/**
+	 * Initializes Browsersync and starts up a session.
+	 */
 	"browser": () => {
 		return browsersync.init(
         ['src/**/*.ts', 
@@ -147,29 +191,44 @@ const taskdef = {
         });
 	},
 
-	"watch": () => {
+	/**
+	 * Once browsersync has been started, this task will watch all application
+	 * files and automatically reload browsersync when a change is deteced.
+	 */
+	"serve": () => {
 		gulp.watch(["src/**/*.ts"], ['compile']).on('change', function (e) {
         browsersync.reload;
-	        console.log('TypeScript file ' + e.path + ' has been changed. Compiling.');
+	        console.log( e.path + ' has been changed. Compiling.');
 	    });
 	    gulp.watch(["src/**/*.html", "src/**/*.scss", "src/**/*.js", "src/**/*.json"], ['resources']).on('change', function (e) {
 	        browsersync.reload;
-	        console.log('Resource file ' + e.path + ' has been changed. Updating.');
+	        console.log(e.path + ' has been changed. Updating.');
 	    });
 	},
 
+	/**
+	 * Run a complete build, but skips the test execution.
+	 */
 	"build:skipTests": () => {
 		del.sync('./dist');
     	return gulp.start('compile');
 	},
 
+	/**
+	 * Run a complete build, including test execution and coverage.
+	 */
 	"build": () => {
 	    del.sync('./dist');
 	    return gulp.start('test');
 	},
 
+	/**
+	 * Run a complete build. Once the build is complete it will 
+	 * start up browsersync and serve the application on the specified
+	 * browser, watching for file changes.
+	 */
 	"build:serve": () => {
-		gulp.start('watch');
+		gulp.start('serve');
 	}
 };
 

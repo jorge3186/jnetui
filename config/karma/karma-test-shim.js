@@ -1,6 +1,6 @@
 Error.stackTraceLimit = 0;
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 5000;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 3000;
 
 var builtPaths = (__karma__.config.builtPaths || ['dist/'])
                  .map(function(p) { return 'base/dist/'+p;});
@@ -36,12 +36,19 @@ System.config({
     '@angular/platform-browser-dynamic/testing': 'npm:@angular/platform-browser-dynamic/bundles/platform-browser-dynamic-testing.umd.js',
     '@angular/http/testing': 'npm:@angular/http/bundles/http-testing.umd.js',
     '@angular/router/testing': 'npm:@angular/router/bundles/router-testing.umd.js',
-    '@angular/forms/testing': 'npm:@angular/forms/bundles/forms-testing.umd.js',
+    '@angular/forms/testing': 'npm:@angular/forms/bundles/forms-testing.umd.js'
   },
+
+  meta: {
+    'app/*': {
+      format: 'register'
+    }
+  }
 });
 
 System.import('systemjs.config.js')
   .then(initTestBed)
+  .then(initExtras)
   .then(initTesting);
 
 function initTestBed(){
@@ -61,8 +68,6 @@ function initTestBed(){
 }
 
 function initTesting () {
-
-  console.debug(JSON.stringify(allSpecFiles));
   return Promise.all(
     allSpecFiles.map(function (moduleName) {
       return System.import(moduleName);
@@ -70,3 +75,5 @@ function initTesting () {
   )
   .then(__karma__.start, __karma__.error);
 }
+
+function initExtras() {}

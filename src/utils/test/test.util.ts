@@ -8,6 +8,7 @@
  */
 import { Type } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
+import { Injector } from "@angular/core";
 import { ComponentFixture } from "@angular/core/testing";
 import { async } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
@@ -163,6 +164,19 @@ export class TestUtil {
 				fixture.detectChanges();
 			});
 		}
+	}
+
+	/**
+	 * @type {Function}
+	 * @param {ComponentFixture<any>} fixture
+	 * @param {T} service
+	 * @return {any} the injected service
+	 *
+	 * This method will take the injector from the component fixture and attempt to
+	 * retrieve the specified injected service then return it.
+	 */
+	public static getInjected<T>(fixture: ComponentFixture<any>, service: T): any {
+		return fixture.debugElement.injector.get(service);
 	}
 
 }

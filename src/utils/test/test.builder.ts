@@ -44,13 +44,34 @@ export class UnitTest {
 	 * Holds the descriptions from each individual unit test.
 	 */
 	private testDesc: string[];
-	
+
+	/**
+	 * @type {void}
+	 * 
+	 * Stores all spies and run's them before each test execution.
+	 */
+	private spyOns: (fixture?: ComponentFixture<any>) => void;
+
 	/**
 	 * @type {any[]}
 	 * 
 	 * Stores the unit tests in order as they are declared.
 	 */
 	private tests: any[];
+
+	/**
+	 * @type {Boolean}
+	 * 
+	 * A global vaiable that when true, will not run any tests.
+	 */
+	private disabled: boolean = false;
+
+	/**
+	 * @type {Boolean}
+	 * 
+	 * A global vaiable that when true, will only run tests that start with 'f'.
+	 */
+	private focus: boolean = false;
 
 	constructor(desc: string) {
 		this.desc = desc;
@@ -90,6 +111,39 @@ export class UnitTest {
 	}
 
 	/**
+	 * @public
+	 * @param {void[]} spyOns
+	 *
+	 * Add any spies to be executed before each test.
+	 */
+	public spies(spyOns: (fixture?: ComponentFixture<any>) => void): UnitTest {
+		this.spyOns = spyOns;
+		return this;
+	}
+
+	/**
+	 * @public
+	 * 
+	 * When enabled, no tests will be run and this UnitTest class 
+	 * will be disabled.
+	 */
+	public disable(): UnitTest {
+		this.disabled = true;
+		return this;
+	}
+
+	/**
+	 * @public
+	 * 
+	 * When enabled, only focused test (tests that start with 'f')
+	 * will be executed.
+	 */
+	public focused(): UnitTest {
+		this.focus = true;
+		return this;
+	}
+
+	/**
 	 * @public 
 	 * @param {String} desc
 	 * @param {Function} test
@@ -100,6 +154,22 @@ export class UnitTest {
 	 */
 	public test(description: string, test: (fixture?: ComponentFixture<any>) => void): UnitTest {
 		this.testDesc.push(description);
+		this.tests.push(test);
+		return this;
+	}
+
+	/**
+	 * @public 
+	 * @param {String} desc
+	 * @param {Function} test
+	 * @return {UnitTest} this
+	 *
+	 * Add a test to this UnitTest class' container which will later be executed 
+	 * when run() is invoked. When there is an `f` in front of the method, it will follow
+	 * jasmine's order and focus only on tests that have focus enabled.
+	 */
+	public ftest(description: string, test: (fixture?: ComponentFixture<any>) => void): UnitTest {
+		this.testDesc.push('**f**'+description);
 		this.tests.push(test);
 		return this;
 	}
@@ -142,6 +212,22 @@ export class UnitTest {
 	 * @return {UnitTest} this
 	 *
 	 * Add an async test to this UnitTest class' container which will later be executed 
+	 * when run() is invoked. When there is an `f` in front of the method, it will follow
+	 * jasmine's order and focus only on tests that have focus enabled.
+	 */
+	public ftestAsync(description: string, test: (fixture?: ComponentFixture<any>) => void): UnitTest {
+		this.testDesc.push('**fasync**'+description);
+		this.tests.push(test);
+		return this;
+	}
+
+	/**
+	 * @public 
+	 * @param {String} desc
+	 * @param {Function} test
+	 * @return {UnitTest} this
+	 *
+	 * Add an async test to this UnitTest class' container which will later be executed 
 	 * when run() is invoked. When there is an `x` in front of the method, it will follow
 	 * jasmine's order and disable the test.
 	 */
@@ -155,24 +241,48 @@ export class UnitTest {
 	 * @public 
 	 *
 	 * Execute all tests in the order they were added using jasmine.
+	 * Takes into affect whether the test has been disabled using `xtest` or `xtestAsync`
+	 * as well as only executing focus tests when focus has be set to true.
 	 */
 	public run(): void {
+		if (this.disabled) {
+			return;
+		}
+
 		describe(this.desc, () => {
 			TestUtil.initTest(this.config);
+
+			if (this.spyOns !== undefined) {
+				beforeEach(() => {
+					let fixture = TestUtil.fixtureFor(this.config.tested);
+					this.spyOns(fixture);
+				});
+			}
+
 			this.tests.forEach((test, idx) => {
 
 				let desc = this.testDesc[idx];
-				if (desc.startsWith('**x**')) {
+				if (desc.startsWith('**x**') && !this.focus) {
 					xit(desc.replace('**x**', ''), () => {
 						let fixture = TestUtil.fixtureFor(this.config.tested);
 						test(fixture);
 					});
-				} else if (desc.startsWith('**async**')) {
+				} else if (desc.startsWith('**async**') && !this.focus) {
 					it(desc.replace('**async**', ''), () => {
 						let fixture = TestUtil.fixtureFor(this.config.tested);
 						async(test(fixture));
 					});
-				} else {
+				} else if (desc.startsWith('**f**')) {
+					it(desc.replace('**f**', ''), () => {
+						let fixture = TestUtil.fixtureFor(this.config.tested);
+						test(fixture);
+					});
+				} else if (desc.startsWith('**fasync**')) {
+					it(desc.replace('**async**', ''), () => {
+						let fixture = TestUtil.fixtureFor(this.config.tested);
+						async(test(fixture));
+					});
+				} else if (!this.focus) {
 					it(desc, () => {
 						let fixture = TestUtil.fixtureFor(this.config.tested);
 						test(fixture);

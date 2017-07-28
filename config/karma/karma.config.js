@@ -1,12 +1,10 @@
 module.exports = function(config) {
 
-	var now = Date.now();
-
 	config.set({
 
 		basePath: '../../',
 
-		browsers: ['PhantomJS'],
+		browsers: ['Chrome'],
 
 		frameworks: ['jasmine'],
 
@@ -22,9 +20,8 @@ module.exports = function(config) {
 		    'dist/lib/zone.js/dist/async-test.js',
 		    'dist/lib/zone.js/dist/fake-async-test.js',
 		    'dist/lib/reflect-metadata/Reflect.js',
-
+		    
 		    { pattern: 'dist/lib/rxjs/**/*.js', included: false, watched: false },
-      		{ pattern: 'dist/lib/rxjs/**/*.js.map', included: false, watched: false },
 
       		{ pattern: 'dist/lib/@angular/**/*.umd.js', included: false, watched: false },
       		{ pattern: 'dist/lib/@angular/**/*.umd.js.map', included: false, watched: false },
@@ -33,25 +30,36 @@ module.exports = function(config) {
 
       		'config/karma/karma-test-shim.js',
 
-      		{ pattern: 'dist/app/**/*.js', included: false, watched: true },
+      		{ pattern: 'dist/app/**/*.js', included: false, watched: false },
 
       		{ pattern: 'dist/app/**/*.js.map', included: false, watched: false },
 
-			{ pattern: 'dist/templates/**/*.html', included: false, watched: true },
+			{ pattern: 'dist/templates/**/*.html', included: false, watched: false },
 
-      		{ pattern: 'dist/styles/**/*.css', included: false, watched: true }
+      		{ pattern: 'dist/styles/**/*.css', included: false, watched: false },
+
+      		{ pattern: 'src/**/*.ts', included: false, watched: false },
 
 		],
 
-    	preprocessors: {},
+    	preprocessors: {
+    		'dist/app/**/!(test)/**/!(*spec).js': ['coverage']
+    	},
 
-		reporters: ['mocha'],
+    	coverageReporter: {
+	      	type : 'json',
+	      	dir: 'dist/coverage/'
+	    },
+
+		reporters: ['mocha', 'coverage'],
 		
 		autoWatch: false,
 		
 		colors: true,
 		
 		logLevel: config.LOG_INFO,
+
+		browserNoActivityTimeout: 30000,
 		
 		concurrency: Infinity
 
